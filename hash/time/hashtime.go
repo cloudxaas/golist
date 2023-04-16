@@ -66,6 +66,18 @@ func DeleteHashValue(hashList *[]byte, hashValueToDelete []byte, hashSize int, t
 	}
 }
 
+func GetTimeValueByHash(hashList *[]byte, targetHashValue []byte, hashSize int, timeSize int) []byte {
+	entrySize := hashSize + timeSize
+
+	for i := 0; i < len(*hashList)/entrySize; i++ {
+		offset := i * entrySize
+		if hashEquals((*hashList)[offset:offset+hashSize], targetHashValue, hashSize) {
+			return (*hashList)[offset+hashSize : offset+entrySize]
+		}
+	}
+
+	return nil
+}
 
 func hashEquals(a, b []byte, hashSize int) bool {
 	for i := 0; i < hashSize; i++ {
