@@ -51,6 +51,22 @@ func AddHashValue(hashList *[]byte, newHashValue []byte, newTimestamp []byte, ha
 	copyToSlice((*hashList)[offset+hashSize:offset+entrySize], newTimestamp, timeSize)
 }
 
+
+func DeleteHashValue(hashList *[]byte, hashValueToDelete []byte, hashSize int, timeSize int) {
+	entrySize := hashSize + timeSize
+
+	for i := 0; i < len(*hashList)/entrySize; i++ {
+		offset := i * entrySize
+		if hashEquals((*hashList)[offset:offset+hashSize], hashValueToDelete, hashSize) {
+			// Shift the entries to the left
+			copy((*hashList)[offset:], (*hashList)[offset+entrySize:])
+			*hashList = (*hashList)[:len(*hashList)-entrySize]
+			break
+		}
+	}
+}
+
+
 func hashEquals(a, b []byte, hashSize int) bool {
 	for i := 0; i < hashSize; i++ {
 		if a[i] != b[i] {
